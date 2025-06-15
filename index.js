@@ -7,8 +7,8 @@ app.use(express.json());
 
 // Sample data with at lease three different categories
 let books = [
-  { id: 1, title: "1984", author: "George Orwell" },
-  { id: 2, title: "The Alchemist", author: "Paulo Coelho" }
+  { id: 1, title: "My first book", author: "Saliou" },
+  { id: 2, title: "my second book", author: "Saliou Gueye" }
 ];
 // app.get('/index.html',(req,res)=>{
 //     res.send(index.html);
