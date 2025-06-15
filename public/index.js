@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-
+const router = express.Router();
 // Middleware to parse JSON
 app.use(express.json());
 app.use(express.static('public'));
@@ -18,14 +18,14 @@ app.get('/books', (req, res) => {
 });
 
 // GET a single book by ID
-app.get('/books/:id', (req, res) => {
+router.get('/books/:id', (req, res) => {
   const book = books.find(b => b.id == req.params.id);
   if (!book) return res.status(404).json({ message: "Book not found" });
   res.json(book);
 });
 
 // POST a new book
-app.post('/books', (req, res) => {
+router.post('/books', (req, res) => {
   const { title, author } = req.body;
   const newBook = {
     id: books.length + 1,
@@ -37,7 +37,7 @@ app.post('/books', (req, res) => {
 });
 
 // PUT to update a book
-app.put('/books/:id', (req, res) => {
+router.put('/books/:id', (req, res) => {
   const book = books.find(b => b.id == req.params.id);
   if (!book) return res.status(404).json({ message: "Book not found" });
 
@@ -48,7 +48,7 @@ app.put('/books/:id', (req, res) => {
 });
 
 // DELETE a book
-app.delete('/books/:id', (req, res) => {
+router.deleteOne('/books/:id', (req, res) => {
   const index = books.findIndex(b => b.id == req.params.id);
   if (index === -1) return res.status(404).json({ message: "Book not found" });
 
