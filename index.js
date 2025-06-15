@@ -5,7 +5,7 @@ const PORT = 3000;
 // Middleware to parse JSON
 app.use(express.json());
 
-// Sample in-memory data
+// Sample data with at lease three different categories
 let books = [
   { id: 1, title: "1984", author: "George Orwell" },
   { id: 2, title: "The Alchemist", author: "Paulo Coelho" }
@@ -39,14 +39,29 @@ app.post('/books', (req, res) => {
 });
 
 // PUT to update a book
-app.put('/books/:id', (req, res) => {
-  const book = books.find(b => b.id == req.params.id);
-  if (!book) return res.status(404).json({ message: "Book not found" });
+app.put('/books/:id', (req, res, next) => {
+  try {
+    const book = books.find(b => b.id === req.params.id);
+    if (!book) {
+      const error = new Error("Book not found");
+      error.status = 404;
+      throw error;
+    }
 
-  const { title, author } = req.body;
-  book.title = title;
-  book.author = author;
-  res.json(book);
+    const { title, author } = req.body;
+    if (!title || !author) {
+      const error = new Error("Title and author are required");
+      error.status = 400;
+      throw error;
+    }
+
+    book.title = title;
+    book.author = author;
+
+    res.json(book);
+  } catch (err) {
+    next(err); // Pass the error to the error handler
+  }
 });
 
 // DELETE a book
