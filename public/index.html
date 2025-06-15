@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Library</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>📚 Book Library</h1>
+
+  <div id="book-list"></div>
+
+  <h2>Add a New Book</h2>
+  <form id="book-form">
+    <input type="text" id="title" placeholder="Title" required />
+    <input type="text" id="author" placeholder="Author" required />
+    <button type="submit">Add Book</button>
+  </form>
+
+  <script>
+    const bookList = document.getElementById('book-list');
+    const form = document.getElementById('book-form');
+
+    // Load books from the API
+    async function loadBooks() {
+      const res = await fetch('/books');
+      const books = await res.json();
+      bookList.innerHTML = books.map(book => `
+        <div class="book">
+          <h3>Book title: ${book.title}</h3>
+          <p><strong>Author:</strong> ${book.author}</p>
+        </div>
+      `).join('');
+    }
+
+    // Submit new book
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const author = document.getElementById('author').value;
+
+      await fetch('/books', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, author })
+      });
+
+      form.reset();
+      loadBooks();
+    });
+
+    loadBooks();
+  </script>
+</body>
+</html>
